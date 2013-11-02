@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>Backbone.CollectionView Tests</title>
+<link rel="stylesheet" href="lib/mocha.css" />
+<style type="text/css">
+  body {
+    font-family: 'Helvetica Neue', Helvetica, Verdana, sans-serif;
+    margin: 0;
+    padding: 0;
+  }
+  #controls, #list {
+    width: 60%;
+    margin: 1em auto;
+  }
+</style>
+<script type="text/template" id="item-view">
+  <div>Name: <%= name %></div>
+</script>
+</head>
+<body>
+
+  <div id="controls">
+    <button class="b1">addItemAtIndex('b1',0)</button>
+    <button class="b2">addItemAtIndex('b2',10)</button>
+    <button class="b3">addItemAtIndex('b3',29)</button>
+    <button class="b4">addItem('b4')</button><br/>
+    <button class="b5">removeSubviewAtIndex(0)</button>
+    <button class="b6">removeSubviewAtIndex(10)</button>
+    <button class="b7">removeSubviewAtIndex(29)</button>
+    <button class="b8">removeItem('Item 5')</button>
+    <button class="b9">removeAllSubviews()</button><br/>
+    <button class="b10">collection.add('b10')</button>
+    <button class="b11">collection.remove('Item 5')</button>
+    <button class="b12">collection.reset('b12a','b12b','b12c')</button>
+    <button class="b13">collection.addItemAtIndex(0 -> 1)</button>
+  </div>
+
+  <div id="list"></div>
+
+  <script src="lib/jquery-2.0.3.js"></script>
+  <script src="lib/underscore-1.5.2.js"></script>
+  <script src="lib/backbone-1.1.0.js"></script>
+  <script src="../lib/collection-view.js"></script>
+
+  <script>
+    $(function () {
+      'use strict';
+
+      var itemTemplate = $('#item-view').html();
+
+      var Item = Backbone.Model.extend({
+        defaults: {
+          name: 'Default'
+        }
+      });
+
+      var Items = Backbone.Collection.extend({
+        model: Item
+      });
+
+      var ItemView = Backbone.View.extend({
+        tagName: 'li',
+        template: _.template(itemTemplate),
+
+        render: function () {
+          this.$el.html(this.template(this.model.toJSON()));
+          return this;
+        },
+
+        dispose: function () {
+          var that = this;
+          this.$el.fadeOut(400, function () {
+            that.remove();
+          });
+        }
+      });
+
+      var ItemsView = Backbone.CollectionView.extend({
+        animate: true,
+        itemView: ItemView,
+        tagName: 'ul'
+      });
+
+      var data = [];
+      _.times(30, function (i) {
+        data.push({
+          id: i,
+          name: 'Item ' + i
+        });
+      });
+
+      var collection = new Items(data);
+
+      var cv = window.cv = new ItemsView({
+        collection: collection
+      });
+
+      cv.on('subview:before:add', function (view) {
+        view.$el.css('opacity', 0);
+      });
+      cv.on('subview:add', function (view) {
+        view.$el.animate({opacity: 1});
+      });
+      cv.on('subview:before:remove', function (view) {
+        view.$el.fadeOut(400);
+      });
+
+      $('#list').append(cv.render().el);
+
+      $('.b1').click(function () {
+        cv.addItemAtIndex(new Item({name: 'b1'}), 0);
+      });
+
+      $('.b2').click(function () {
+        cv.addItemAtIndex(new Item({name: 'b2'}), 10);
+      });
+
+      $('.b3').click(function () {
+        cv.addItemAtIndex(new Item({name: 'b3'}), 29);
+      });
+
+      $('.b4').click(function () {
+        cv.addItem(new Item({name: 'b4'}));
+      });
+
+      $('.b5').click(function () {
+        cv.removeSubviewAtIndex(0);
+      });
+
+      $('.b6').click(function () {
+        cv.removeSubviewAtIndex(10);
+      });
+
+      $('.b7').click(function () {
+        cv.removeSubviewAtIndex(29);
+      });
+
+      $('.b8').click(function () {
+        var model = collection.findWhere({ name: 'Item 5'});
+        cv.removeItem(model);
+      });
+
+      $('.b9').click(function () {
+        cv.removeAllSubviews();
+      });
+
+      $('.b10').click(function () {
+        collection.add(new Item({name: 'b10'}));
+      });
+
+      $('.b11').click(function () {
+        var model = collection.findWhere({name: 'Item 5'});
+        collection.remove(model);
+      });
+
+      $('.b12').click(function () {
+        var models = [{name: 'b12a'}, {name: 'b12b'}, {name: 'b12c'}];
+        collection.reset(models);
+      });
+
+      $('.b13').click(function () {
+        var a = collection.at(0);
+        cv.addItemAtIndex(a, 1);
+      });
+    });
+  </script>
+</body>
+</html>
