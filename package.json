@@ -1,6 +1,6 @@
 {
   "name": "backbone-collection-view",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "CollectionView implementation for Backbone.",
   "keywords": ["backbone", "view", "collection"],
   "author": "Bryan Dragon",
