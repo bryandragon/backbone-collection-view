@@ -65,11 +65,11 @@ make build
 
 #### `getSubviewForItem(model)`
 
-#### `addItemAtIndex(model, index)`
+#### `addSubviewForItemAtIndex(model, index)`
 
-#### `addItem(model)`
+#### `addSubviewForItem(model)`
 
-#### `removeItem(model)`
+#### `removeSubviewForItem(model)`
 
 #### `buildSubviewForItem(model)`
 

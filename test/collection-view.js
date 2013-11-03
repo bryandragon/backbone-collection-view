@@ -433,12 +433,12 @@ describe('Backbone.CollectionView', function () {
     });
   });
 
-  describe('.addItem()', function () {
+  describe('.addSubviewForItem()', function () {
     it('should append a sub-view for the given model', function () {
       var cv = createInstance()
         , model = new Model;
 
-      cv.addItem(model);
+      cv.addSubviewForItem(model);
 
       expect(cv.getSubviews().length).to.equal(models.length + 1);
       expect(cv.getSubviewAtIndex(models.length)).to.be.ok;
@@ -448,21 +448,21 @@ describe('Backbone.CollectionView', function () {
       var cv = createInstance()
         , model = cv.collection.at(0);
 
-      cv.addItem(model);
+      cv.addSubviewForItem(model);
 
       expect(cv.getSubviews().length).to.equal(models.length);
       expect(cv.getSubviewAtIndex(models.length)).to.equal(null);
     });
   });
 
-  describe('.addItemAtIndex()', function () {
+  describe('.addSubviewForItemAtIndex()', function () {
     it('should add a sub-view for the given model at the given index', function () {
       var cv = createInstance()
         , index = 10
         , model = new Model
         , view = cv.getSubviewAtIndex(index);
 
-      cv.addItemAtIndex(model, index);
+      cv.addSubviewForItemAtIndex(model, index);
 
       expect(cv.getSubviews().length).to.equal(models.length + 1);
       expect(cv.getSubviewAtIndex(index)).not.to.equal(view);
@@ -474,21 +474,21 @@ describe('Backbone.CollectionView', function () {
         , model = cv.collection.at(index)
         , view = cv.getSubviewAtIndex(index);
 
-      cv.addItemAtIndex(model, index);
+      cv.addSubviewForItemAtIndex(model, index);
 
       expect(cv.getSubviews().length).to.equal(models.length);
       expect(cv.getSubviewAtIndex(index)).to.equal(view);
     });
   });
 
-  describe('.removeItem()', function () {
+  describe('.removeSubviewForItem()', function () {
     it('should remove the sub-view for the given model', function () {
       var cv = createInstance()
         , index = 10
         , model = cv.collection.at(index)
         , view = cv.getSubviewAtIndex(index);
 
-      cv.removeItem(model);
+      cv.removeSubviewForItem(model);
 
       expect(cv.getSubviews().length).to.equal(models.length - 1);
       expect(cv.getSubviewAtIndex(index)).not.to.equal(view);
@@ -498,7 +498,7 @@ describe('Backbone.CollectionView', function () {
       var cv = createInstance()
         , mod = new Model;
 
-      cv.removeItem(mod);
+      cv.removeSubviewForItem(mod);
 
       expect(cv.getSubviews().length).to.equal(models.length);
     });
